@@ -8,10 +8,10 @@ var localData = [ {
 } ];
 var isOnline = [ {
 	delflag : 1,
-	text : '上线'
+	text : '上架'
 }, {
 	delflag : 0,
-	text : '下线'
+	text : '下架'
 } ];
 
 function f_initGrid() {
@@ -83,8 +83,8 @@ function f_initGrid() {
 				        	   },
 				        	   render : function(item) {
 				        		   if (parseInt(item.delflag) == 1)
-				        			   return '上线';
-				        		   return '下线';
+				        			   return "<span style='color:green'>上架</span>";
+				        		   return '下架';
 				        	   }
 				           },
 				           {
@@ -104,13 +104,13 @@ function f_initGrid() {
 				           onSelectRow : function(rowdata, rowindex) {
 				        	   $("#txtrowindex").val(rowindex);
 				           },
-				           url : "../restful/products/read",
+				           url : "../../restful/products/read",
 				           method : "GET",
 				           enabledEdit : true,
 				           clickToEdit : false,
 				           isScroll : false,
 				           rownumbers : true,
-				           width: '100%',
+				           width: "99%",
 				           height: 'auto', 
 				           resizable:false,
 				           checkbox : true,
@@ -156,7 +156,7 @@ function delSelectRows() {
 		}
 	});
 }
-var isPopWin = false;
+//var isPopWin = false;
 function addProduct() {
 //	if (!isPopWin) {
 //		f_open1();
@@ -169,7 +169,7 @@ function addProduct() {
 function f_open1() {
 	$.ligerDialog.open({
 		height : 400,
-		url : 'addProductForm',
+		url : '../../product/w/form',
 		width : 500,
 		showMax : true,
 		showToggle : false,
@@ -190,20 +190,16 @@ function f_open1() {
 			}
 		} ]
 	});
-
 }
-
 function addNewProduct(formData)
 {
-	lsAjaxPost("../restful/product/add",
+	lsAjaxPost("../../restful/product/add",
 			"application/x-www-form-urlencoded",
 			formData,
 	"新建产品");
 }
-
-
 function delRows(rowUids) {
-	lsAjaxPost("../restful/product/del"
+	lsAjaxPost("../../restful/product/del"
 			,"application/json"
 			,JSON.stringify(rowUids)
 			,"删除产品");
@@ -211,13 +207,11 @@ function delRows(rowUids) {
 function updateServerData(rowid) {
 	manager.endEdit();
 	var rowData = manager.getRow(rowid);
-	lsAjaxPost("../restful/product/update"
+	lsAjaxPost("../../restful/product/update"
 			,"application/json"
 			,JSON.stringify(rowData)
 			,"更新产品");
 }
-
-
 function lsAjaxPost(postUrl,contentType,data,tip) {
 	$.ajax({
 		//提交数据的类型 POST GET

@@ -1,5 +1,8 @@
 package ywcai.ls.entity;
 
+
+
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+
 
 @Entity
 @Table(name="roles")
@@ -28,10 +33,9 @@ public class Roles {
     private String rolename;
     
     
-    @ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+    @ManyToOne(cascade={CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.MERGE},fetch=FetchType.LAZY)
     @JoinColumn(name="userid")//加入一列作为外键
     private User user;
-
 
 	public Long getId() {
 		return id;
@@ -71,8 +75,5 @@ public class Roles {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-    
-    
 
 }

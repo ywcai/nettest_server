@@ -26,25 +26,26 @@ public class Orders {
 	private int localproduct;
 	private String clientip;
 	private int price,rate;
+	private String orderdesc;
 
-	public Orders() {
-	}
-
-	public Orders(String ordernum, String openid, String mobile, int productid, int totalfee, int payfast, String echo,
-			int orderstatus, int delflag, String packcode, int localproduct, String clientip) {
-		this.ordernum = ordernum;
-		this.openid = openid;
-		this.mobile = mobile;
-		this.productid = productid;
-		this.totalfee = totalfee;
-		this.payfast = payfast;
-		this.echo = echo;
-		this.orderstatus = orderstatus;
-		this.delflag = delflag;
-		this.packcode = packcode;
-		this.localproduct = localproduct;
-		this.clientip = clientip;
-	}
+//	public Orders() {
+//	}
+//
+//	public Orders(String ordernum, String openid, String mobile, int productid, int totalfee, int payfast, String echo,
+//			int orderstatus, int delflag, String packcode, int localproduct, String clientip) {
+//		this.ordernum = ordernum;
+//		this.openid = openid;
+//		this.mobile = mobile;
+//		this.productid = productid;
+//		this.totalfee = totalfee;
+//		this.payfast = payfast;
+//		this.echo = echo;
+//		this.orderstatus = orderstatus;
+//		this.delflag = delflag;
+//		this.packcode = packcode;
+//		this.localproduct = localproduct;
+//		this.clientip = clientip;
+//	}
 
 
 
@@ -196,13 +197,16 @@ public class Orders {
 		this.rate = rate;
 	}
 
-	@Override
-	public String toString() {
-		return "Orders [uid=" + uid + ", timestamp=" + timestamp + ", ordernum=" + ordernum + ", openid=" + openid
-				+ ", mobile=" + mobile + ", productid=" + productid + ", totalfee=" + totalfee + ", payfast=" + payfast
-				+ ", echo=" + echo + ", orderstatus=" + orderstatus + ", delflag=" + delflag + ", packcode=" + packcode
-				+ ", localproduct=" + localproduct + ", clientip=" + clientip + "]";
+	@Column(name = "orderdesc", nullable = false)
+	public String getOrderdesc() {
+		return orderdesc;
+	}
+
+	public void setOrderdesc(String orderdesc) {
+		this.orderdesc = orderdesc;
 	}
 	
+	
+
 	
 }

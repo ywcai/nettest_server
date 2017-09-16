@@ -1,8 +1,6 @@
 package ywcai.ls.repository;
 
 
-import java.util.List;
-
 import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,5 +11,7 @@ import ywcai.ls.entity.User;
 @Table(name="user")
 @Qualifier("userRepository")
 public interface UserRepository extends JpaRepository<User, Long > {
-	List<User> findByUsername(String username);
+	User findTop1ByUsername(String username);
+	int deleteByUsername(String username);
+	void deleteByUsernameIsNull();
 }

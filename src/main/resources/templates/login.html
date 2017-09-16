@@ -1,25 +1,54 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
 <meta charset="UTF-8" />
-<title>Insert title here</title>
+<title>后台登录系统</title>
 </head>
-<body>
-	<div th:if="${param.error}">用户名或密码错</div>
-	<div th:if="${param.logout}">您已注销成功</div>
-	<form th:action="@{/login}" method="post">
-		<div>
-			<label> 用户名 : <input type="text" name="username" />
-			</label>
-		</div>
-		<div>
-			<label> 密 码 : <input type="password" name="password" />
-			</label>
-		</div>
-		<div>
-			<input type="submit" value="登录" />
-		</div>
-	</form>
+<body
+	style="width: 100%; padding: 0px; margin: 200px auto; font-size: 12px; text-align: center">
+	<div style="width: 50%; margin: 10px auto; border: green 1px dashed;padding:20px">
+		<form th:action="@{/login}" method="post">
+			<table cellpadding="0" cellspacing="0">
+				<tr style="heigth: 40px">
+					<td align="right"><span style="margin-right: 10px">账号</span></td>
+					<td align="left"><input name="username" id="username" value=''
+						type="text" /></td>
+				</tr>
+				<tr>
+					<td align="right"><div style="height: 10px"></div></td>
+					<td align="left"></td>
+				</tr>
+				<tr style="heigth: 40px">
+					<td align="right" style="margin-right: 10px"><span
+						style="margin-right: 10px">密码</span></td>
+					<td align="left" style="margin-left: 10px"><input
+						name="password" value='' type="password" /></td>
+				</tr>
+				<tr>
+					<td align="right"><div style="height: 10px"></div></td>
+					<td align="left"></td>
+				</tr>
+				<tr>
+					<td align="right"></td>
+					<td align="left"><input name="sub" class="ui-button"
+						type="submit" value='登录' /></td>
+				</tr>
+				<tr>
+					<td align="right"><div style="height: 20px"></div></td>
+					<td align="left"></td>
+				</tr>
+				<tr>
+					<td align="right"></td>
+					<td align="left">
+						<div th:if="${param.error}" style="color:red">用户名密码错误</div>
+						<div th:if="${param.logout}" style="color:red">您已注销成功</div>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<div style="color:red;font-size:14px;height: 50px;align-text:center;font-family:微软雅黑;">系统不支持IE8及以下版本浏览器</div>
 </body>
 </html>

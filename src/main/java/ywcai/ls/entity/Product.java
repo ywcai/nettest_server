@@ -28,34 +28,34 @@ public class Product {
 	private String des;
 	private int delflag;
 
-	public Product() {
-	}
+//	public Product() {
+//	}
 
-	public Product(int productid, int packcode, int flowsize, int price, int rate, int local, String operator,
-			int delflag) {
-		this.productid = productid;
-		this.packcode = packcode;
-		this.flowsize = flowsize;
-		this.price = price;
-		this.rate = rate;
-		this.local = local;
-		this.operator = operator;
-		this.delflag = delflag;
-	}
+//	public Product(int productid, int packcode, int flowsize, int price, int rate, int local, String operator,
+//			int delflag) {
+//		this.productid = productid;
+//		this.packcode = packcode;
+//		this.flowsize = flowsize;
+//		this.price = price;
+//		this.rate = rate;
+//		this.local = local;
+//		this.operator = operator;
+//		this.delflag = delflag;
+//	}
 
-	public Product(int productid, int packcode, int flowsize, int price, int rate, int local, String operator,
-			String province, String des, int delflag) {
-		this.productid = productid;
-		this.packcode = packcode;
-		this.flowsize = flowsize;
-		this.price = price;
-		this.rate = rate;
-		this.local = local;
-		this.operator = operator;
-		this.province = province;
-		this.des = des;
-		this.delflag = delflag;
-	}
+//	public Product(int productid, int packcode, int flowsize, int price, int rate, int local, String operator,
+//			String province, String des, int delflag) {
+//		this.productid = productid;
+//		this.packcode = packcode;
+//		this.flowsize = flowsize;
+//		this.price = price;
+//		this.rate = rate;
+//		this.local = local;
+//		this.operator = operator;
+//		this.province = province;
+//		this.des = des;
+//		this.delflag = delflag;
+//	}
 
 	@Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

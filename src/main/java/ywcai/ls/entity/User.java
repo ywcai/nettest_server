@@ -1,5 +1,6 @@
 package ywcai.ls.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 
@@ -23,7 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name="user")
-public class User implements UserDetails{
+public class User implements  UserDetails, Serializable{
 
 	/**
 	 * 
@@ -41,7 +43,8 @@ public class User implements UserDetails{
     @Column(name="password")
     private String password;
     
-    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="user")
+    @OneToMany(cascade={CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE},fetch=FetchType.EAGER,mappedBy="user")
+    @OrderBy(value= "id ASC")
     private Set<Roles> rolelist;
     
 	public Set<Roles> getRolelist() {

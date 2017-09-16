@@ -6,11 +6,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BeanFactory {
-
-	@Bean(name = "jsonProduct")
-	@Qualifier(value = "jsonProduct")
-	public JsonProduct jsonProduct()
+	@Bean(name = "jsonData")
+	@Qualifier(value = "jsonData")
+	public JsonData jsonData()
 	{
-		return new JsonProduct();
+		return new JsonData();
 	}
 }
