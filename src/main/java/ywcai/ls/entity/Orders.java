@@ -205,8 +205,4 @@ public class Orders {
 	public void setOrderdesc(String orderdesc) {
 		this.orderdesc = orderdesc;
 	}
-	
-	
-
-	
 }

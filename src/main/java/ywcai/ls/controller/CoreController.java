@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import ywcai.ls.bean.ChartData;
 import ywcai.ls.bean.JsonData;
 import ywcai.ls.bean.RoleBody;
 import ywcai.ls.bean.UserInfo;
@@ -30,6 +31,7 @@ import ywcai.ls.entity.Roles;
 import ywcai.ls.entity.User;
 import ywcai.ls.service.CustomUserService;
 import ywcai.ls.service.inf.AccountProcessInf;
+import ywcai.ls.service.inf.AnalysisOrderInf;
 import ywcai.ls.service.inf.OrderProcessInf;
 import ywcai.ls.service.inf.ProductProcessInf;
 
@@ -38,6 +40,8 @@ public class CoreController {
 
 	@Autowired
 	private JsonData jsonData;
+	@Autowired
+	private AnalysisOrderInf analysisOrder;
 	@Autowired
 	private ProductProcessInf productProcess;
 	@Autowired
@@ -60,7 +64,8 @@ public class CoreController {
 	String loginForm() {
 		return "login";
 	}
-
+	
+	
 	/*
 	 * 首页框架，基础用户登录权限
 	 * 
@@ -70,7 +75,6 @@ public class CoreController {
 	String manage(Model model,HttpSession session) {
 
 		String account_name=((SecurityContextImpl)(session.getAttribute("SPRING_SECURITY_CONTEXT"))).getAuthentication().getName();	
-//		System.out.println(userDetails.getUsername()+"\n\n");
 		model.addAttribute("accountname", account_name);
 		return "index";
 	}
@@ -81,7 +85,7 @@ public class CoreController {
 	 * */
 	@RequestMapping(value="/base/welcome",method=RequestMethod.GET)
 	@RolesAllowed("USER") 
-	String welcome(Model model) {
+	String welcome() {
 
 		return "welcome";
 	}
@@ -124,7 +128,7 @@ public class CoreController {
 	 * */
 	@RequestMapping(value="/product/w/form",method=RequestMethod.GET)
 	@RolesAllowed("ROLE_PRODUCT_RW")
-	String pwf(Model model) {
+	String pwf() {
 		return "service/productAddForm";
 	}
 
@@ -134,7 +138,7 @@ public class CoreController {
 	 * */
 	@RequestMapping(value="/order/r/list",method=RequestMethod.GET)
 	@RolesAllowed({"ROLE_ORDER_R","ROLE_ORDER_RW"})
-	String orl(Model model) {
+	String orl() {
 
 		return "service/orderList";
 	}
@@ -145,7 +149,7 @@ public class CoreController {
 	 * */
 	@RequestMapping("/order/w/list")
 	@RolesAllowed({"ROLE_ORDER_RW"})
-	String owl(Model model) {
+	String owl() {
 
 		return "service/orderManageList";
 	}
@@ -157,22 +161,38 @@ public class CoreController {
 	 * */
 	@RequestMapping("/account/s/role")
 	@RolesAllowed("ROLE_ACCOUNT_RW")
-	String asl(Model model) {
+	String asl() {
 
 		return "account/modity_role";
 	}
 
 
+	
+	
+	
+	
 	/*
 	 * 超级管理员权限，操作所有用户权限
 	 * 
 	 * */
 	@RequestMapping("/account/s/update")
 	@RolesAllowed("ROLE_ACCOUNT_RW")
-	String asp(Model model) {
+	String asp() {
 
 		return "account/update_view";
 	}
+	
+	
+	/*
+	 * 读订单权限
+	 * 
+	 * */
+	@RequestMapping("/analysis/r/order")
+	@RolesAllowed({"ROLE_ORDER_R","ROLE_ORDER_RW"})
+	String aro() {
+		return "analysis/analysisOrder";
+	}
+	
 
 	//以下是restful接口路由
 	/*
@@ -380,5 +400,20 @@ public class CoreController {
 		String result=accountProcess.delUser(user);
 		return result;
 	}
-
+	
+	
+	
+	
+	/*
+	 * 数据分析查看权限
+	 * 
+	 * */
+	@RequestMapping(value="/restful/analysis/order",method=RequestMethod.POST)
+	@RolesAllowed({"USER"})
+	@ResponseBody
+	public ChartData analysisOrder(@RequestBody String analysisType)
+	{
+		ChartData chartData=analysisOrder.getDatasets(analysisType);
+		return chartData;
+	}
 }

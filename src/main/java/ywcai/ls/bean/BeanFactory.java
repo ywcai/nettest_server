@@ -12,4 +12,12 @@ public class BeanFactory {
 	{
 		return new JsonData();
 	}
+	@Bean(name = "chartData")
+	@Qualifier(value = "chartData")
+	public ChartData chartData()
+	{
+		return new ChartData();
+	}
+//	
+//	
 }

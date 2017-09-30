@@ -42,6 +42,7 @@ function f_initGrid() {
 				        	   display : '订单状态',
 				        	   name : 'orderstatus',
 				        	   render : function(item) {
+				        
 				        		   if (parseInt(item.orderstatus) == 0)
 				        		   {
 				        			   return "未支付";
@@ -56,7 +57,7 @@ function f_initGrid() {
 				        		   }
 				        		   else if(parseInt(item.orderstatus) == 3)
 				        		   {
-				        			   return "<span style='color:red'>充值失败</span>"; 
+				        			   return "<span style='color:red'>提交充值失败<br>第三方平台异常</span>"; 
 				        		   }
 				        		   else if(parseInt(item.orderstatus) == 4)
 				        		   {
@@ -64,11 +65,11 @@ function f_initGrid() {
 				        		   }
 				        		   else if(parseInt(item.orderstatus) == 5)
 				        		   {
-				        			   return "<span style='color:red'>充值失败<br>已退款</span>"; 
+				        			   return "<span style='color:red'>充值失败<br>退款成功</span>"; 
 				        		   }
 				        		   else 
 				        		   {
-				        			   return "<span style='color:red'>错误订单</span>"; 
+				        			   return "<span style='color:red'>未知错误订单</span>"; 
 				        		   }
 				        	   }
 				           },

@@ -31,11 +31,12 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.headers().frameOptions().disable();
-		http
-		.csrf().disable();
-		http
+		 http.headers().frameOptions().disable();
+		 http
+		 .csrf().disable();
+		 http
 		.authorizeRequests()
+		.antMatchers("/login","/res/**").permitAll()
 		.anyRequest().authenticated()
 		.and()
 		.formLogin()//这个方法则会取消框架默认的弹出密码登录框。
@@ -51,7 +52,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 
 	@Bean  
 	public PasswordEncoder passwordEncoder() {  
-		return new BCryptPasswordEncoder();  
+		return new BCryptPasswordEncoder();
 	}  
 
 
@@ -62,5 +63,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 		authenticationProvider.setPasswordEncoder(passwordEncoder());  
 		return authenticationProvider;  
 	}  
+	
+	
 	
 }

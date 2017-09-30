@@ -15,6 +15,8 @@ var isOnline = [ {
 } ];
 
 function f_initGrid() {
+
+
 	g = manager = $("#maingrid").ligerGrid(
 			{
 				//toolbar: {},
