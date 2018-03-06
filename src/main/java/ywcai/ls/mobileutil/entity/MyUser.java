@@ -51,8 +51,9 @@ public class MyUser {
 	@Column(name="active")
 	private boolean active;
 
-
-
+	@Column(name="userimg")
+	public String userImg;
+	
 	public Long getId() {
 		return id;
 	}

@@ -5,6 +5,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
  
 
 @Configuration
@@ -14,6 +15,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 
 	 
 	
+ 
 //    @Autowired 
 //	public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {  
 ////        auth.userDetailsService(customUserService);  
@@ -27,19 +29,24 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 		 http
 		 .csrf().disable();
 		 http
-		.authorizeRequests()
-		.antMatchers( 
-				"/login",
-				"/user/**",
-				"/record/**",
-				"/open/**").permitAll()
-		.anyRequest().authenticated()
-		.and()
-		.formLogin()//这个方法则会取消框架默认的弹出密码登录框。
-		.loginPage("/login")
-		.and()
-		.logout()
-		.invalidateHttpSession(true)
+		 .authorizeRequests()
+		 .anyRequest()
+		 .permitAll()
+//		.authorizeRequests()
+
+//		.antMatchers( 
+//				"/login",
+//				"/user/**",
+//				"/record/**",
+//				"/article/**",
+//				"/open/**").permitAll()
+//		.anyRequest().authenticated()
+//		 .and()
+//		 .formLogin()//这个方法则会取消框架默认的弹出密码登录框。
+//		 .loginPage("/login")
+//		 .and()
+//		 .logout()
+//		 .invalidateHttpSession(true)
 		;
 	}
 

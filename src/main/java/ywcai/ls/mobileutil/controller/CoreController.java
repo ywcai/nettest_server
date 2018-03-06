@@ -1,6 +1,5 @@
 package ywcai.ls.mobileutil.controller;
 
-
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +19,14 @@ import ywcai.ls.mobileutil.bean.LogIndex;
 import ywcai.ls.mobileutil.bean.ResultState;
 import ywcai.ls.mobileutil.bean.HttpBaseEntity;
 import ywcai.ls.mobileutil.bean.UploadResult;
+import ywcai.ls.mobileutil.entity.ArticleIndex;
 import ywcai.ls.mobileutil.entity.MyRecord;
 import ywcai.ls.mobileutil.entity.MyUser;
-import ywcai.ls.mobileutil.log.MyLog;
+import ywcai.ls.mobileutil.entity.UserComment;
+import ywcai.ls.mobileutil.service.ArticleService;
+import ywcai.ls.mobileutil.service.CommentService;
 import ywcai.ls.mobileutil.service.RecordService;
 import ywcai.ls.mobileutil.service.UserService;
-
 
 
 @Controller
@@ -35,20 +36,45 @@ public class CoreController {
 	private RecordService recordService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ArticleService articleService;
+	@Autowired
+	private CommentService commentService;
 
 
+ 
 	@RequestMapping(value="/user/get/{openID}/{channelID}",method=RequestMethod.GET)
 	@ResponseBody
-	HttpBaseEntity<MyUser> getMyUser(@PathVariable String openID,@PathVariable int channelID) {
+	HttpBaseEntity<MyUser> getMyUser(@PathVariable String openID,@PathVariable int channelID)  {
 		HttpBaseEntity<MyUser> baseEntity=new HttpBaseEntity<MyUser>();
-		MyUser myUser=userService.getUser(openID, channelID);
-		if(myUser==null||openID==null)
+		if(openID==null||channelID==0)
 		{
-			myUser=userService.createNewUser(openID,channelID);
+			baseEntity.code=-1;
+			baseEntity.msg="无效参数";
+			return baseEntity;
+		}
+		if(openID.equals(""))
+		{
+			baseEntity.code=-1;
+			baseEntity.msg="无效参数";
+			return baseEntity;
+		}
+		MyUser myUser=userService.getUser(openID, channelID);
+		if(myUser==null)
+		{
+			try
+			{
+				myUser=userService.createNewUser(openID,channelID);
+			}
+			catch(Exception e)
+			{
+				
+			}
 			if(myUser==null)
 			{
-				baseEntity.code=-1;
-				baseEntity.msg="fail:创建用户异常";
+				baseEntity.code=-2;
+				baseEntity.msg="注册失败";
+				return baseEntity;
 			}
 		}
 		baseEntity.code=0;
@@ -296,7 +322,220 @@ public class CoreController {
 	}
 
 
+	@RequestMapping(value="/record/del/{userid}",method=RequestMethod.POST)
+	@ResponseBody
+	HttpBaseEntity<List<LogEntity>>  delRecords(
+			@PathVariable long userid) {	
+		HttpBaseEntity<List<LogEntity>> httpBaseEntity=new HttpBaseEntity<List<LogEntity>>();
+		if(userid==0)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="fail:无效参数!";
+			return httpBaseEntity;
+		}
+		List<LogEntity> list=recordService.delRecords(userid);
+		if(list==null)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="fail:云端已无数据!";
+			return httpBaseEntity;
+		}
+		httpBaseEntity.code=0;
+		httpBaseEntity.msg="success";
+		httpBaseEntity.data=list;
+		return httpBaseEntity;
+	}
 
+
+	@RequestMapping(value="/article/get/new/{type}/{size}/{startId}",method=RequestMethod.GET)
+	@ResponseBody
+	HttpBaseEntity<List<ArticleIndex>> getNewArticleIndex(
+			@PathVariable int type,
+			@PathVariable int size,
+			@PathVariable long startId
+			) {	
+
+		HttpBaseEntity<List<ArticleIndex>> httpBaseEntity=new HttpBaseEntity<List<ArticleIndex>>();
+		List<ArticleIndex> list=articleService.getNewArticle(type, size, startId);
+		if(list==null)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="暂时没有新的数据";
+			return httpBaseEntity;
+		}
+		if(list.size()<=0)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="暂时没有新的数据";
+			return httpBaseEntity;
+		}
+		for(int i=0;i<list.size();i++)
+		{
+			list.get(i).articleContent="";
+		}
+		httpBaseEntity.code=0;
+		httpBaseEntity.msg="success";
+		httpBaseEntity.data=list;
+		return httpBaseEntity;
+	}
+
+	@RequestMapping(value="/article/get/old/{type}/{size}/{endId}",method=RequestMethod.GET)
+	@ResponseBody
+	HttpBaseEntity<List<ArticleIndex>>  getOldArticleIndex(
+			@PathVariable int type,
+			@PathVariable int size,
+			@PathVariable long endId
+			) {	
+
+		HttpBaseEntity<List<ArticleIndex>> httpBaseEntity=new HttpBaseEntity<List<ArticleIndex>>();
+		List<ArticleIndex> list=articleService.getOlderArticle(type, size, endId);
+		if(list==null)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="已经撸到底了";
+			return httpBaseEntity;
+		}
+		if(list.size()<=0)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="已经撸到底了";
+			return httpBaseEntity;
+		}
+		for(int i=0;i<list.size();i++)
+		{
+			list.get(i).articleContent="";
+		}
+		httpBaseEntity.code=0;
+		httpBaseEntity.msg="success";
+		httpBaseEntity.data=list;
+		return httpBaseEntity;
+	}
+
+	@RequestMapping(value="/article/get/near/{type}/{size}/{centerId}",method=RequestMethod.GET)
+	@ResponseBody
+	HttpBaseEntity<List<ArticleIndex>>  getNearArticleIndex(
+			@PathVariable int type,
+			@PathVariable int size,
+			@PathVariable long centerId
+			) {	
+
+		HttpBaseEntity<List<ArticleIndex>> httpBaseEntity=new HttpBaseEntity<List<ArticleIndex>>();
+		List<ArticleIndex> list=articleService.getNearArticle(type, size, centerId);
+		if(list==null)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="已经撸到底了";
+			return httpBaseEntity;
+		}
+		if(list.size()<=0)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="已经撸到底了";
+			return httpBaseEntity;
+		}
+		//附近的索引信息则不携带文章正文数据，否则会导致手机端占用太多内存
+		for(int i=1;i<list.size();i++)
+		{
+			list.get(i).articleContent="";
+		}
+		httpBaseEntity.code=0;
+		httpBaseEntity.msg="success";
+		httpBaseEntity.data=list;
+		return httpBaseEntity;
+	}
+
+
+	@RequestMapping(value="article/post/comment",method=RequestMethod.POST)
+	@ResponseBody
+	HttpBaseEntity<UploadResult> postComment(@RequestBody UserComment userComment) throws Exception {	
+		HttpBaseEntity<UploadResult> httpBaseEntity=new HttpBaseEntity<UploadResult>();
+		UploadResult uploadResult=new UploadResult();
+		uploadResult.msg="msg";
+		httpBaseEntity.data=uploadResult;
+	    if(!commentService.checkRule(userComment))
+	    {
+			httpBaseEntity.code=-3;
+			httpBaseEntity.msg="内容不符合规范";
+			return httpBaseEntity;
+	    }
+		
+		if(!commentService.checkSign(userComment))
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="数字签名错误";
+			return httpBaseEntity;
+		}
+		uploadResult.uploadSize=commentService.addComment(userComment);
+		if(uploadResult.uploadSize==0)
+		{
+			httpBaseEntity.code=-2;
+			httpBaseEntity.msg="插入数据失败";
+			return httpBaseEntity;
+		}
+		httpBaseEntity.code=0;
+		httpBaseEntity.msg="success";
+		return httpBaseEntity;
+	}
+
+	//获取最优的前5条评论，仅在第一次加载数据时调用
+	@RequestMapping(value="article/get/great/comment/{articleId}",method=RequestMethod.GET)
+	@ResponseBody
+	HttpBaseEntity<List<UserComment>> getGreatComment(
+			@PathVariable long articleId
+			) {	
+		HttpBaseEntity<List<UserComment>> httpBaseEntity=new HttpBaseEntity<List<UserComment>>();
+		if(articleId<=0)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="无效参数";
+			return httpBaseEntity;
+		}
+		httpBaseEntity.code=0;
+		httpBaseEntity.msg="success";
+		httpBaseEntity.data=null;
+		return httpBaseEntity;
+	}
+
+	//用于打开界面后的刷新，显示所有未显示的新数据
+	@RequestMapping(value="article/get/new/comment/{articleId}/{startId}",method=RequestMethod.GET)
+	@ResponseBody
+	HttpBaseEntity<List<UserComment>> getNewComment(
+			@PathVariable long articleId,
+			@PathVariable long startId
+			) {	
+		HttpBaseEntity<List<UserComment>> httpBaseEntity=new HttpBaseEntity<List<UserComment>>();
+		if(articleId<=0)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="无效参数";
+			return httpBaseEntity;
+		}
+		httpBaseEntity.code=0;
+		httpBaseEntity.msg="success";
+		List<UserComment> list=commentService.getNewComment(articleId,startId);
+		httpBaseEntity.data=list;
+		return httpBaseEntity;
+	}
+
+	@RequestMapping(value="article/get/old/comment/{articleId}/{endId}",method=RequestMethod.GET)
+	@ResponseBody
+	HttpBaseEntity<List<UserComment>> getOldComment(
+			@PathVariable long articleId,
+			@PathVariable long endId
+			) {	
+		HttpBaseEntity<List<UserComment>> httpBaseEntity=new HttpBaseEntity<List<UserComment>>();
+		if(endId<=0||articleId<=0)
+		{
+			httpBaseEntity.code=-1;
+			httpBaseEntity.msg="无效参数";
+			return httpBaseEntity;
+		}
+		httpBaseEntity.code=0;
+		httpBaseEntity.msg="success";
+		List<UserComment> list=commentService.getOldComment(articleId,endId);
+		httpBaseEntity.data=list;
+		return httpBaseEntity;
+	}
 
 
 	@RequestMapping(value="/open/help",method=RequestMethod.GET)

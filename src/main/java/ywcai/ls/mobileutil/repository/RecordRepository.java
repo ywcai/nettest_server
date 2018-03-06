@@ -19,10 +19,10 @@ import ywcai.ls.mobileutil.entity.MyRecord;
 @Qualifier("recordRepository")
 public interface RecordRepository extends JpaRepository<MyRecord, Long > {
 
-	List<MyRecord> findByUseridOrderByCreatetimeDesc(long userid);
+	List<MyRecord> findByUseridOrderByIdDesc(long userid);
 	LogEntity findByUseridAndId(long userid, long id);
 	Page<MyRecord> findByUserid(long userid, Pageable pageable);
-	List<MyRecord> findByUseridAndRecordtypeIn(long userid, Collection<Integer> collection);
+	List<MyRecord> findByUseridAndRecordtypeInOrderByIdDesc(long userid, Collection<Integer> collection);
 	MyRecord findByIdAndUserid(long recordid, long userid);
 
 }

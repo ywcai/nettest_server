@@ -13,6 +13,6 @@ import ywcai.ls.mobileutil.entity.MyUser;
 @Qualifier("userRepository")
 public interface UserRepository extends JpaRepository<MyUser, Long > {
 	MyUser findTop1ByOpenidAndChannelid(String openid,int channelid);
-	MyUser findTopByOrderByUseridDesc();
+	MyUser findTop1ByOrderByUseridDesc();
 	MyUser findTop1ByUserid(long userid);
 }

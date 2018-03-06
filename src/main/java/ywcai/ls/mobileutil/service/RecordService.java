@@ -48,7 +48,7 @@ public class RecordService {
 
 	public List<LogIndex> getRecords(long userid) {
 		List<LogIndex> list=new ArrayList<LogIndex>();
-		List<MyRecord> records=recordRepository.findByUseridOrderByCreatetimeDesc(userid);
+		List<MyRecord> records=recordRepository.findByUseridOrderByIdDesc(userid);
 		if(records==null)
 		{
 			return list;
@@ -67,7 +67,6 @@ public class RecordService {
 		}
 		return list;
 	}
-
 
 	public List<LogIndex> getRecordForPageable(long userid, Pageable pageable) {
 		Page<MyRecord> pages=recordRepository.findByUserid(userid,pageable);
@@ -97,7 +96,7 @@ public class RecordService {
 				collection.add(i);
 			}
 		}
-		List<MyRecord> records=recordRepository.findByUseridAndRecordtypeIn(userid,collection);
+		List<MyRecord> records=recordRepository.findByUseridAndRecordtypeInOrderByIdDesc(userid,collection);
 		if(records==null)
 		{
 			return null;
@@ -119,7 +118,7 @@ public class RecordService {
 		logEntity.max=records.size();
 		LogIndex logIndex=new LogIndex();
 		logIndex.addr=records.get(pos-1).getAddr();
-		logIndex.cacheFileName=records.get(pos-1).getAddr();
+		logIndex.cacheFileName=records.get(pos-1).getFilename();
 		logIndex.aliasFileName=records.get(pos-1).getAliasname();
 		logIndex.remarks=records.get(pos-1).getRemarks();
 		logIndex.logTime=records.get(pos-1).getCreatetime();
@@ -175,6 +174,39 @@ public class RecordService {
 			return logEntity;
 		}
 		return logEntity;
+	}
+
+	@Transactional
+	public List<LogEntity> delRecords(long userid) {
+		// TODO Auto-generated method stub
+		List<MyRecord> records= recordRepository.findByUseridOrderByIdDesc(userid);
+		if(records==null)
+		{
+			return null;
+		}
+		if(records.size()==0)
+		{
+			return null;
+		}
+		recordRepository.delete(records);
+		List<LogEntity> logs=new ArrayList<LogEntity>();
+		for(int i=0;i<records.size();i++)
+		{
+			LogEntity logEntity=new LogEntity();
+			logEntity.data=records.get(i).getContent();
+			logEntity.max=records.size();
+			LogIndex logIndex=new LogIndex();
+			logIndex.addr=records.get(i).getAddr();
+			logIndex.cacheFileName=records.get(i).getFilename();
+			logIndex.aliasFileName=records.get(i).getAliasname();
+			logIndex.remarks=records.get(i).getRemarks();
+			logIndex.logTime=records.get(i).getCreatetime();
+			logIndex.recordId=records.get(i).getId();
+			logIndex.cacheTypeIndex=records.get(i).getRecordtype();
+			logEntity.logIndex=logIndex;
+			logs.add(logEntity);
+		}
+		return logs;
 	}
 
 
